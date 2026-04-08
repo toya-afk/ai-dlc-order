@@ -5,7 +5,6 @@ export interface OrderItemRequest {
 
 export interface OrderCreateRequest {
   tableId: number;
-  sessionId: number;
   items: OrderItemRequest[];
 }
 
@@ -21,6 +20,5 @@ export interface OrderResponse {
   orderNumber: string;
   items: OrderItemResponse[];
   totalAmount: number;
-  status: string;
   createdAt: string;
 }

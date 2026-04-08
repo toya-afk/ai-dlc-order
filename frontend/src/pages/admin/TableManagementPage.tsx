@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { useTables, useCreateTable, useEndTableSession } from '../../hooks/useTables';
-import ConfirmDialog from '../../components/ConfirmDialog';
+import { useTables, useCreateTable } from '../../hooks/useTables';
 import type { TableCreateRequest } from '../../types/table';
 
 export default function TableManagementPage() {
   const { data: tables = [], isLoading } = useTables();
   const createTable = useCreateTable();
-  const endSession = useEndTableSession();
 
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<TableCreateRequest>({ number: 0, name: '', password: '' });
-  const [endSessionTarget, setEndSessionTarget] = useState<number | null>(null);
 
   const handleCreate = () => {
     if (!form.number || !form.name.trim() || !form.password.trim()) return;
@@ -19,13 +16,6 @@ export default function TableManagementPage() {
         setShowForm(false);
         setForm({ number: 0, name: '', password: '' });
       },
-    });
-  };
-
-  const handleEndSession = () => {
-    if (!endSessionTarget) return;
-    endSession.mutate(endSessionTarget, {
-      onSuccess: () => setEndSessionTarget(null),
     });
   };
 
@@ -65,32 +55,10 @@ export default function TableManagementPage() {
             <div>
               <span className="text-lg font-bold">테이블 {table.number}</span>
               <span className="ml-2 text-sm text-gray-500">{table.name}</span>
-              {table.currentSessionId && (
-                <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">세션 활성</span>
-              )}
             </div>
-            {table.currentSessionId && (
-              <button
-                onClick={() => setEndSessionTarget(table.id)}
-                className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600"
-                data-testid={`table-end-session-${table.id}`}
-              >
-                이용 완료
-              </button>
-            )}
           </div>
         ))}
       </div>
-
-      <ConfirmDialog
-        isOpen={!!endSessionTarget}
-        title="이용 완료"
-        message="테이블 세션을 종료하시겠습니까? 현재 주문이 이력으로 이동됩니다."
-        confirmLabel="이용 완료"
-        onConfirm={handleEndSession}
-        onCancel={() => setEndSessionTarget(null)}
-        isLoading={endSession.isPending}
-      />
     </div>
   );
 }

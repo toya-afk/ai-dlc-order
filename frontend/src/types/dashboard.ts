@@ -3,7 +3,6 @@ export interface OrderSummary {
   orderNumber: string;
   menuSummary: string;
   totalAmount: number;
-  status: 'PENDING' | 'PREPARING' | 'COMPLETED';
   createdAt: string;
 }
 

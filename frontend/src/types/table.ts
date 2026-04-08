@@ -3,8 +3,6 @@ export interface TableResponse {
   number: number;
   name: string;
   password: string;
-  currentSessionId: number | null;
-  sessionStatus: 'ACTIVE' | 'ENDED' | null;
 }
 
 export interface TableCreateRequest {
@@ -18,12 +16,7 @@ export interface TableUpdateRequest {
   password: string;
 }
 
-export interface SessionEndResponse {
-  archivedOrderCount: number;
-  totalAmount: number;
-}
-
-export interface OrderHistoryResponse {
+export interface OrderHistoryItem {
   orderId: number;
   orderNumber: string;
   items: { menuName: string; quantity: number; unitPrice: number }[];

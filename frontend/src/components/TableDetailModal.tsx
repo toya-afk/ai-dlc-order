@@ -1,34 +1,18 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteOrder, updateOrderStatus } from '../api/orderApi';
+import { deleteOrder } from '../api/orderApi';
 import { useTableOrders } from '../hooks/useOrders';
 import type { TableDashboardResponse } from '../types/dashboard';
-import type { OrderResponse } from '../types/order';
 
 interface TableDetailModalProps {
   table: TableDashboardResponse;
   onClose: () => void;
 }
 
-const STATUS_OPTIONS = [
-  { value: 'PENDING', label: '대기중', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'PREPARING', label: '준비중', color: 'bg-blue-100 text-blue-800' },
-  { value: 'COMPLETED', label: '완료', color: 'bg-green-100 text-green-800' },
-];
-
 export default function TableDetailModal({ table, onClose }: TableDetailModalProps) {
   const queryClient = useQueryClient();
   const { data: orders = [] } = useTableOrders(table.tableId);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
-
-  const statusMutation = useMutation({
-    mutationFn: ({ orderId, status }: { orderId: number; status: string }) =>
-      updateOrderStatus(orderId, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-    },
-  });
 
   const deleteMutation = useMutation({
     mutationFn: (orderId: number) => deleteOrder(orderId),
@@ -38,10 +22,6 @@ export default function TableDetailModal({ table, onClose }: TableDetailModalPro
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
-
-  const handleStatusChange = (order: OrderResponse, newStatus: string) => {
-    statusMutation.mutate({ orderId: order.orderId, status: newStatus });
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
@@ -75,23 +55,11 @@ export default function TableDetailModal({ table, onClose }: TableDetailModalPro
                 ))}
               </div>
 
-              <div className="mt-3 flex items-center gap-2">
-                {STATUS_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => handleStatusChange(order, opt.value)}
-                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                      order.status === opt.value ? opt.color + ' ring-2 ring-offset-1' : 'bg-gray-100 text-gray-500'
-                    }`}
-                    data-testid={`order-status-${order.orderId}-${opt.value}`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-
+              <div className="mt-2 flex justify-between items-center">
+                <span className="text-sm font-bold">{order.totalAmount.toLocaleString()}원</span>
                 <button
                   onClick={() => setConfirmDelete(order.orderId)}
-                  className="ml-auto text-xs text-red-500 hover:text-red-700"
+                  className="text-xs text-red-500 hover:text-red-700"
                   data-testid={`order-delete-${order.orderId}`}
                 >
                   삭제

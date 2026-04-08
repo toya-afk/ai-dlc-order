@@ -3,8 +3,7 @@ import type {
   TableResponse,
   TableCreateRequest,
   TableUpdateRequest,
-  SessionEndResponse,
-  OrderHistoryResponse,
+  OrderHistoryItem,
   PagedResponse,
 } from '../types/table';
 
@@ -23,18 +22,13 @@ export async function updateTable(tableId: number, data: TableUpdateRequest): Pr
   return response.data;
 }
 
-export async function endTableSession(tableId: number): Promise<SessionEndResponse> {
-  const response = await apiClient.post<SessionEndResponse>(`/tables/${tableId}/sessions/end`);
-  return response.data;
-}
-
 export async function getOrderHistory(
   tableId: number,
   date?: string,
   page = 0,
-): Promise<PagedResponse<OrderHistoryResponse>> {
+): Promise<PagedResponse<OrderHistoryItem>> {
   const params: Record<string, unknown> = { tableId, page, size: 20 };
   if (date) params.date = date;
-  const response = await apiClient.get<PagedResponse<OrderHistoryResponse>>('/orders/history', { params });
+  const response = await apiClient.get<PagedResponse<OrderHistoryItem>>('/orders/history', { params });
   return response.data;
 }

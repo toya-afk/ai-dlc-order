@@ -9,8 +9,3 @@ export async function createOrder(data: OrderCreateRequest): Promise<OrderRespon
 export async function deleteOrder(orderId: number): Promise<void> {
   await apiClient.delete(`/orders/${orderId}`);
 }
-
-export async function updateOrderStatus(orderId: number, status: string): Promise<OrderResponse> {
-  const response = await apiClient.patch<OrderResponse>(`/orders/${orderId}/status`, { status });
-  return response.data;
-}

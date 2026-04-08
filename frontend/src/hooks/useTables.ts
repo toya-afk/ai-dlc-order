@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getTables, createTable, updateTable, endTableSession } from '../api/tableApi';
+import { getTables, createTable, updateTable } from '../api/tableApi';
 import type { TableCreateRequest, TableUpdateRequest } from '../types/table';
 
 export function useTables() {
@@ -20,16 +20,5 @@ export function useUpdateTable() {
     mutationFn: ({ tableId, data }: { tableId: number; data: TableUpdateRequest }) =>
       updateTable(tableId, data),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['tables'] }),
-  });
-}
-
-export function useEndTableSession() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (tableId: number) => endTableSession(tableId),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['tables'] });
-      qc.invalidateQueries({ queryKey: ['dashboard'] });
-    },
   });
 }

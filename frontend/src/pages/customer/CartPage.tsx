@@ -8,7 +8,7 @@ export default function CartPage() {
   const navigate = useNavigate();
   const { items, updateQuantity, removeItem, clear } = useCartStore();
   const totalAmount = useCartTotalAmount();
-  const { tableId, sessionId } = useTableStore();
+  const { tableId } = useTableStore();
   const createOrder = useCreateOrder();
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +19,6 @@ export default function CartPage() {
     createOrder.mutate(
       {
         tableId,
-        sessionId: sessionId ?? 0,
         items: items.map((i) => ({ menuId: i.menuId, quantity: i.quantity })),
       },
       {

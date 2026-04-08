@@ -3,8 +3,8 @@ import { useTableStore } from '../../stores/useTableStore';
 import OrderCard from '../../components/OrderCard';
 
 export default function OrderHistoryPage() {
-  const { tableId, sessionId } = useTableStore();
-  const { data: orders = [], isLoading } = useSessionOrders(tableId, sessionId);
+  const { tableId } = useTableStore();
+  const { data: orders = [], isLoading } = useSessionOrders(tableId);
 
   if (isLoading) {
     return (
