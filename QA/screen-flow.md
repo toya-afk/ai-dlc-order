@@ -82,9 +82,8 @@ JWT 토큰 유효? ──No──> /admin/login
     v
 /admin/dashboard (실시간 주문 모니터링 — 기본 화면)
     |
-    |── SSE 연결 (GET /sse/orders)
-    |── 테이블별 카드 그리드 레이아웃
-    |── 신규 주문 시 카드 강조 (색상/애니메이션)
+    |── 테이블별 카드 그리드 레이아웃 (GET /orders/dashboard)
+    |── 신규 주문 시 카드 강조 (hasNewOrder)
     |── 테이블별 필터링
     |
     |── 테이블 카드 클릭
